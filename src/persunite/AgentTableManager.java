@@ -37,6 +37,8 @@ public class AgentTableManager {
     private TableRowSorter<DefaultTableModel> sorter;
     private String selectedMatrim;
     private String selectedGroupId;
+    private String selectedAgentNom;
+    private String selectedAgentPrenom;
 
     // =====================================================
     // CONSTRUCTOR
@@ -383,16 +385,20 @@ table.setRowHeight(34);
                 int row =
                     table.getSelectedRow();
  
+                selectedMatrim = (String) table.getValueAt(row, 0);
+                selectedAgentNom = (String) table.getValueAt(row, 1);
+                selectedAgentPrenom = (String) table.getValueAt(row, 2);
+                
                 lblSelectedAgent.setText(
-  
+   
                     "Agent : "
-                    + table.getValueAt(row, 0)
+                    + selectedMatrim
                     + " "        
-                    + table.getValueAt(row, 1)
+                    + selectedAgentNom
                     + " "
-                    + table.getValueAt(row, 2)
+                    + selectedAgentPrenom
                 );
-                selectedMatrim =   (String) table.getValueAt(row, 0) ;
+                
                 lblSelectedGroup.setText(
 
                     "Group : "
@@ -406,30 +412,30 @@ table.setRowHeight(34);
         // =================================================
 
        txtRecherche.getDocument()
-        .addDocumentListener(
+         .addDocumentListener(
 
-    new javax.swing.event.DocumentListener() {
+     new javax.swing.event.DocumentListener() {
 
-    @Override
-    public void insertUpdate(
-            javax.swing.event.DocumentEvent e) {
+     @Override
+     public void insertUpdate(
+             javax.swing.event.DocumentEvent e) {
 
-        searchAgent();
-    }
+         searchAgent();
+     }
 
-    @Override
-    public void removeUpdate(
-            javax.swing.event.DocumentEvent e) {
+     @Override
+     public void removeUpdate(
+             javax.swing.event.DocumentEvent e) {
 
-        searchAgent();
-    }
+         searchAgent();
+     }
 
-    @Override
-    public void changedUpdate(
-            javax.swing.event.DocumentEvent e) {
+     @Override
+     public void changedUpdate(
+             javax.swing.event.DocumentEvent e) {
 
-        searchAgent();
-    }
+         searchAgent();
+     }
 });
 
         // =================================================
@@ -547,23 +553,65 @@ table.setRowHeight(34);
 
 private void searchAgent() {
 
-    String text =
-        txtRecherche.getText()
-        .trim();
+     String text =
+         txtRecherche.getText()
+         .trim();
 
-    if (text.isEmpty()) {
+     if (text.isEmpty()) {
 
-        sorter.setRowFilter(null);
+         sorter.setRowFilter(null);
 
-    } else {
+     } else {
 
-        sorter.setRowFilter(
-            RowFilter.regexFilter(
-                "(?i)" + text
-            )
-        );
+         sorter.setRowFilter(
+             RowFilter.regexFilter(
+                 "(?i)" + text
+             )
+         );
+     }
+ }
+
+    // =====================================================
+    // GETTERS - FOR EVENT MANAGEMENT
+    // =====================================================
+
+    /**
+     * Get the selected agent's MATRIM (ID)
+     */
+    public String getSelectedMatrim() {
+        return selectedMatrim;
     }
-}
+
+    /**
+     * Get the selected agent's full name
+     */
+    public String getSelectedAgentName() {
+        if (selectedAgentNom != null && selectedAgentPrenom != null) {
+            return selectedAgentNom + " " + selectedAgentPrenom;
+        }
+        return "";
+    }
+
+    /**
+     * Get the selected agent's first name
+     */
+    public String getSelectedAgentNom() {
+        return selectedAgentNom;
+    }
+
+    /**
+     * Get the selected agent's last name
+     */
+    public String getSelectedAgentPrenom() {
+        return selectedAgentPrenom;
+    }
+
+    /**
+     * Check if an agent is selected
+     */
+    public boolean hasSelection() {
+        return selectedMatrim != null && !selectedMatrim.isEmpty();
+    }
 
     // =====================================================
     // CUSTOM RENDERER
